@@ -1,0 +1,122 @@
+=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=
+CIS 120 Game Project README
+PennKey: anyelina
+Game: Tetris
+=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=
+
+===================
+=: Core Concepts :=
+===================
+
+- List the four core concepts, the features they implement, and why each feature
+  is an appropriate use of the concept. Incorporate the feedback you got after
+  submitting your proposal.
+
+  1. 2D Arrays
+  
+  2D Arrays present in Block.java: I stored each of the 7 shapes in 4x2 2D arrays.
+  See the Shapes enum. The 4x2 arrays were manually inputted with binary ints
+  1 and 0, where 0 represents an empty "square" in the 2D array and 1 represents a
+  square that contains a single grid from the Tetris block. A Shape is thus comprised 
+  of its 2D array and its respective color. Since the Tetris blocks are two-dimensional shapes, 
+  need to be rotated, and are made of square grids, it's easy to use rectangular
+  2D arrays and manually select the row and column of the array where you want a single 
+  grid to be placed.
+
+  2. Collections 
+  
+  Collections present in Block.java: I'm storing each of the seven different Shapes
+  in an ArrayList of Shapes. See the ArrayList blocklist. 
+  Because I need to retrieve a Shape at random when playing the game, 
+  it's easiest to store the Shapes in an ArrayList because I can generate random numbers, and 
+  thus get a Shape at the random index. Since the Shapes are retrieved at random, order is not relevant
+  but this collection was simpler to implement than Sets or Maps.
+
+  3. File I/O
+  
+  File I/O present in Board.java: I implemented a Highscore chart on the left hand side of the game
+  window. Whenever a game ends, there will be a JOptionPane requesting the player's name, and once the player
+  inputs the name, an entry with the name and the player's final score will be added to the TreeMap highscores.
+  TreeMaps are naturally sorted by key, so there is no extra method to sort the scores. 
+  Then, we use the method writeHighscore() to input the Map entries to Scores.txt. 
+  Then, we extract the contents from Scores.txt into a new TreeMap output, which also stores <score, name>. 
+  We do this by splitting the Strings by "User:" and "Score:", adding this information into a 1D String array,
+  where the even indices in the array are the the scores and the odd indices are the names. 
+  Using these indices, we retrieve a pair of score with name, which becomes a new entry into the TreeMap output. 
+  Then, we print the first five entries (sorted naturally) from output and draw them onto the game window. 
+  
+  Feedback gradescope: This looks good for reading in data with different levels but keep in mind 
+  you also need to write data out. Perhaps through a high-score functionality 
+  between games or something?
+
+  4. Unit Testing
+  
+  Unit testing in TetrisTest.java: I did not write tests for rotation and stacking blocks 
+  over one another, as these can be easily checked for accuracy if you run the game. The edge
+  cases that I could think of were: rotating the block such that the position of the rotated 
+  block exceeds the width of the Tetris board, moving the blocks past the width of the board,
+  clearing the lines only when these are filled with blocks (and not when there are gaps),
+  clearing multiple lines at once and updating the score accurately, and not generating new blocks
+  if the grid is filled and there is insufficient space for a new block (game over). 
+
+=========================
+=: Your Implementation :=
+=========================
+
+- Provide an overview of each of the classes in your code, and what their
+  function is in the overall game.
+  
+  Block: contains the Shapes enum that creates each of the 7 possible types of Tetris blocks 
+  with their respective color. Block.java also contains the random retrieval of blocks,
+  rotating methods on the blocks 
+  and retrieving information from the blocks, such as X and Y coordinates. 
+  
+  Board: draws basically everything: the grid, and blocks mid-game (timer, shifting down),
+  and displays the blocks being dropped/cleared. 
+  Implements all the basic game functions (start, pause, game over). 
+  Handles all the movements (left/right, dropping) of the blocks and their behaviors, such 
+  as stacking over one another, clearing of rows whenever a row is filled with blocks,
+  updating scores when lines are cleared. Also contains File I/O methods (enterName(),
+  writeHighscore(), extractHighscore(), drawHighscore()). 
+  
+  Tetris: run the game here. 
+  Creates the game window, displays current score, adds pause/resume button and instructions.
+  
+  TetrisTest: JUnit tests on edge cases.
+
+
+- Were there any significant stumbling blocks while you were implementing your
+  game (related to your design, or otherwise)?
+  
+  BUG: could not get File I/O to accurately work. Clearly, when you run the game, highscores
+  is set to null and whenever you end a game, your name and score never gets written to Scores.txt
+  for some reason. They do get stored inside the TreeMap highscores though. 
+  The methods I implemented for File I/O seem accurate and their logic makes sense.
+
+
+- Evaluate your design. Is there a good separation of functionality? How well is
+  private state encapsulated? What would you refactor, if given the chance?
+
+Variables are always private UNLESS they are used between classes (such as the Shapes 
+arraylist, and scores). 
+
+I could improve on creating separate classes for the methods in Board.java, such as
+a separate class for all the methods relevant to File I/O, and another class for the keylisteners.
+Code would be easier to navigate if Board.java only contained variables and methods relevant
+to drawing the board/pieces rather than every functionality of the game. 
+
+
+========================
+=: External Resources :=
+========================
+
+- Cite any external resources (libraries, images, tutorials, etc.) that you may
+  have used while implementing your game.
+  
+  https://youtu.be/QOJfyp0KMmM
+  https://www.youtube.com/watch?v=KjEaD0KyL0w&t=933s&ab_channel=PlayJava
+  https://www.youtube.com/watch?v=VEzg_9B1KB0&t=713s&ab_channel=SylvainSaurel
+  https://examples.javacodegeeks.com/core-java/io/fileoutputstream/how-to-write-an-object-to-file-in-java/
+  https://manwhocodes.blogspot.com/2013/04/tetris-with-java-2d-games.html
+  https://docs.oracle.com/javase/tutorial/uiswing/events/intro.html
+  https://docs.oracle.com/javase/tutorial/uiswing/events/keylistener.html
